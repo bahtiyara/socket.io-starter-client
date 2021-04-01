@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { io } from "socket.io-client"
+import { useEffect } from "react"
+
+const socket = io("ws://localhost:8000")
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    useEffect(() => {
+        socket.on("countUpdated", (count) => {
+            console.log("The count has been updated!", count)
+        })
+    })
+
+    return (
+        <div className="App">
+            <button onClick={onButtonClicked}>Increment</button>
+        </div>
+    )
 }
 
-export default App;
+function onButtonClicked() {
+    socket.emit("increment")
+}
+
+export default App
